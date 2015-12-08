@@ -1,4 +1,5 @@
 # from  math import sqrt
+from enum import Enum
 import cmath
 
 # 正常曲直
@@ -40,3 +41,53 @@ print(max([1, 2, 3, 3]))
 listT = [1, 2, 3, 4]
 del listT[2]
 print(listT)
+
+
+# 类
+class Student(object):
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        if value < 0 or value > 100:
+            raise ValueError('score must between 0 ~ 100!')
+        self._score = value
+
+    def __str__(self):
+        return 'this is class %s' % self.__class__.__name__
+
+
+stu = Student()
+stu.score = 100
+
+print(stu)
+
+
+# 链式调用
+class Chain(object):
+    def __init__(self, path=''):
+        self_path = path
+
+    def __getattr__(self, path):
+        return Chain('%s/%s' % (self._path, path))
+
+    def __str__(self):
+        return self._path
+
+    __repr__ = __str__
+
+
+# url = Chain().users.repos
+# print(Chain())
+print(callable(Student))
+
+# 枚举
+Week = Enum('Week', ('Mon', 'Tus', 'Wen', 'Ths', 'Fir', 'Sat', 'Sun'))
+for key, member in Week.__members__.items():
+    print(key, '=>', member, ',', member.value)
+
+print(Week.Mon)
