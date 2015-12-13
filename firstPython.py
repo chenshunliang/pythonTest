@@ -2,6 +2,7 @@
 from enum import Enum
 import cmath
 import logging
+import unittest
 
 # 正常曲直
 print(1 / 2)
@@ -101,3 +102,9 @@ except Exception as e:
     # logging.exception(e)
 finally:
     print('has exception')
+
+
+# 单元测试
+class TsetMy(unittest.TestCase):
+    def test_add(self, a, b):
+        self.assertTrue(isinstance(1, int))
