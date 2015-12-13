@@ -1,6 +1,7 @@
 # from  math import sqrt
 from enum import Enum
 import cmath
+import logging
 
 # 正常曲直
 print(1 / 2)
@@ -91,3 +92,12 @@ for key, member in Week.__members__.items():
     print(key, '=>', member, ',', member.value)
 
 print(Week.Mon)
+
+# 异常
+try:
+    print(100 / 0)
+except Exception as e:
+    print('fail')
+    # logging.exception(e)
+finally:
+    print('has exception')
