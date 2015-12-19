@@ -1,6 +1,9 @@
-from io import StringIO
 import os
 import pickle
+import time
+import random
+from multiprocessing import Pool, Process, Queue
+import subprocess
 
 # f = open('/Volumes/CHEN\'S DISK/chen\'s python/pythonTest/pythonTest.txt', 'r')
 # txt = f.read()
@@ -54,3 +57,55 @@ f = open('/Volumes/CHEN\'S DISK/chen\'s python/pythonTest/pythonTest.txt', 'rb')
 x = pickle.load(f)
 f.close()
 print(x)
+
+print('process %s is start' % os.getpid())
+
+#  多进程
+# def long_time_task(name):
+#     print('run task %s (%s)' % (name, os.getpid()))
+#     start = time.time()
+#     time.sleep(random.random() * 3)
+#     end = time.time()
+#     print('task %s runs %0.2f seconds' % (name, (end - start)))
+#
+#
+# if __name__ == '__main__':
+#     print('parent process %s' % os.getpid())
+#     p = Pool(4)
+#     for i in range(5):
+#         p.apply_async(long_time_task, args=(i,))
+#     print('waiting for all subprocess done...')
+#     p.close()
+#     p.join()
+#     print('all subprocess done...')
+
+# 子进程
+print('$ nslookup www.python.org')
+r = subprocess.call(['nslookup', 'www.python.org'])
+print('exit code:', r)
+
+
+# 进程间通信
+def write(q):
+    print('process to write %s' % os.getpid())
+    for value in ['A', 'B', 'C']:
+        print('put %s to queue...' % value)
+        q.put(value)
+        time.sleep(random.random())
+
+
+def read(q):
+    print('process to read %s' % os.getpid())
+    while True:
+        value = q.get(True)
+        print('get %s from queue...' % value)
+
+
+if __name__ == '__main__':
+    q = Queue()
+    pw = Process(target=write, args=(q,))
+    pr = Process(target=read, args=(q,))
+    pw.start()
+    pr.start()
+    pw.join()
+    pr.terminate()
